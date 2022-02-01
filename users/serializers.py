@@ -1,16 +1,11 @@
 from rest_framework import serializers
 from .models import User
+from softdesk.models import Project
 
 
 class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['id', 'first_name', 'last_name', 'email', 'password']
-        extra_kwargs = {
-            'password': {
-                'write_only': True
-            }
-        }
+    projects = serializers.PrimaryKeyRelatedField(
+        many=True, queryset=Project.objects.all())
 
     def create(self, validated_data):
         password = validated_data.pop('password', None)
@@ -19,3 +14,13 @@ class UserSerializer(serializers.ModelSerializer):
             instance.set_password(password)
         instance.save()
         return instance
+
+    class Meta:
+        model = User
+        fields = ['id', 'first_name', 'last_name',
+                  'email', 'password', 'projects']
+        extra_kwargs = {
+            'password': {
+                'write_only': True
+            }
+        }
