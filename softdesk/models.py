@@ -2,6 +2,9 @@ from django.db import models
 from users.models import User
 from django.conf import settings
 
+from rest_framework.response import Response
+from rest_framework import status
+
 
 class Project(models.Model):
     title = models.CharField(max_length=100, blank=True, default='')
@@ -37,9 +40,13 @@ class Comment(models.Model):
 
 
 class Contributor(models.Model):
-    user_id = models.ForeignKey(
+    user = models.ForeignKey(
         User, related_name='contributions', on_delete=models.CASCADE)
-    project_id = models.ForeignKey(
+    project = models.ForeignKey(
         Project, related_name='contributors', on_delete=models.CASCADE)
     # permission = models.ChoiceField()
     role = models.CharField(max_length=100, blank=True, default='')
+
+    class Meta:
+        pass
+        #        unique_together = ('user_id', 'project_id')

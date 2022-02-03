@@ -7,6 +7,19 @@ class UserSerializer(serializers.ModelSerializer):
     projects = serializers.PrimaryKeyRelatedField(
         many=True, queryset=Project.objects.all())
 
+    class Meta:
+        model = User
+        read_only_fields = ['id', 'projects']
+        fields = ['id', 'first_name', 'last_name',
+                  'email', 'password', 'projects']
+        extra_kwargs = {
+            'password': {
+                'write_only': True
+            }
+        }
+
+
+class UserCreateSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         password = validated_data.pop('password', None)
         instance = self.Meta.model(**validated_data)
@@ -17,6 +30,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
+        read_only_fields = ['id', 'projects']
         fields = ['id', 'first_name', 'last_name',
                   'email', 'password', 'projects']
         extra_kwargs = {
