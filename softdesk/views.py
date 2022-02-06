@@ -80,7 +80,7 @@ class MultipleFieldLookupMixin:
         return obj
 
 
-class ContributorDelete(generics.RetrieveDestroyAPIView, MultipleFieldLookupMixin):
+class ContributorDetail(generics.RetrieveDestroyAPIView, MultipleFieldLookupMixin):
     queryset = Contributor.objects.all()
     serializer_class = ContributorSerializer
     permission_classes = (IsAuthenticated,)
@@ -111,7 +111,7 @@ class IssueCreate(generics.ListCreateAPIView):
         return self.queryset.filter(project_id=project)
 
 
-class IssueDelete(generics.RetrieveUpdateDestroyAPIView, MultipleFieldLookupMixin):
+class IssueDetail(generics.RetrieveUpdateDestroyAPIView, MultipleFieldLookupMixin):
     queryset = Issue.objects.all()
     serializer_class = IssueSerializer
     permission_classes = (IsAuthenticated, IsOwnerOrContributorReadOnly,)
@@ -153,7 +153,7 @@ class CommentCreate(generics.ListCreateAPIView):
         return self.queryset.filter(issue_id=self.kwargs['issue_id'])
 
 
-class CommentDelete(generics.RetrieveUpdateDestroyAPIView, MultipleFieldLookupMixin):
+class CommentDetail(generics.RetrieveUpdateDestroyAPIView, MultipleFieldLookupMixin):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = (IsAuthenticated, IsOwnerOrContributorReadOnly,)
@@ -161,7 +161,9 @@ class CommentDelete(generics.RetrieveUpdateDestroyAPIView, MultipleFieldLookupMi
     lookup_fields = ['issue_id', 'id']
 
     def get_queryset(self, *args, **kwargs):
-        issue = Issue.objects.get(id=self.kwargs['issue_id'])
-        project = issue.project_id
-        self.check_object_permissions(self.request, project)
         return self.queryset.filter(issue_id=self.kwargs['issue_id'])
+
+    def get_object(self):
+        obj = get_object_or_404(self.get_queryset(),
+                                pk=self.kwargs['id'])
+        return obj
