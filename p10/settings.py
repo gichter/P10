@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
+    'rest_framework.authtoken',
     'corsheaders',
     'softdesk',
     'users',
@@ -56,9 +57,9 @@ MIDDLEWARE = [
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
-    ]
+    ],
 }
 
 ROOT_URLCONF = 'p10.urls'

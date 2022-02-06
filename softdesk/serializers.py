@@ -6,6 +6,15 @@ from users.models import User
 from users.serializers import UserSerializer
 
 
+class IssueSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Issue
+        read_only_fields = ['id', 'project_id']
+        fields = ['id', 'title', 'description', 'tag', 'priority',
+                  'status', 'author_user_id', 'assignee_user_id', 'project_id']
+
+
 class ContributorMinimalSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -23,12 +32,13 @@ class ContributorSerializer(serializers.ModelSerializer):
 
 class ProjectSerializer(serializers.ModelSerializer):
     contributors = ContributorMinimalSerializer(many=True, read_only=True)
+    issues = IssueSerializer(many=True, read_only=True)
 
     class Meta:
         model = Project
         read_only_fields = ['id', 'author_user_id']
         fields = ['id', 'title', 'description',
-                  'type', 'author_user_id', 'contributors']
+                  'type', 'author_user_id', 'contributors', 'issues']
 
 
 class ContributorCreateSerializer(serializers.ModelSerializer):
@@ -43,16 +53,7 @@ class IssueCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Issue
-        read_only_fields = ['id', 'project_id']
-        fields = ['id', 'title', 'description', 'tag', 'priority',
-                  'status', 'author_user_id', 'assignee_user_id', 'project_id']
-
-
-class IssueSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Issue
-        read_only_fields = ['id', 'project_id']
+        read_only_fields = ['id', 'project_id', 'author_user_id']
         fields = ['id', 'title', 'description', 'tag', 'priority',
                   'status', 'author_user_id', 'assignee_user_id', 'project_id']
 

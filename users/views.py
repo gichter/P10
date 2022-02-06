@@ -3,7 +3,6 @@ from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
 
-import datetime
 import jwt
 
 from .serializers import UserSerializer, UserCreateSerializer
@@ -21,24 +20,13 @@ class LoginView(APIView):
         password = request.data['password']
 
         user = User.objects.filter(email=email).first()
-
         if user is None:
             raise AuthenticationFailed('User not found')
 
         if not user.check_password(password):
             raise AuthenticationFailed('Password is incorrect')
 
-        payload = {
-            'id': user.id,
-            'exp': datetime.datetime.now() + datetime.timedelta(minutes=60),
-            'iat': datetime.datetime.now(),
-        }
-
-        token = jwt.encode(payload, 'secret',
-                           algorithm='HS256')
-
         response = Response()
-        response.set_cookie(key='jwt', value=token, httponly=True)
         response.data = {
             'message': 'Successfully Logged In',
         }

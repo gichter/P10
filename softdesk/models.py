@@ -49,4 +49,3 @@ class Contributor(models.Model):
 
     class Meta:
         pass
-        #        unique_together = ('user_id', 'project_id')
