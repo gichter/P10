@@ -2,9 +2,6 @@ from django.db import models
 from users.models import User
 from django.conf import settings
 
-from rest_framework.response import Response
-from rest_framework import status
-
 
 class Project(models.Model):
     title = models.CharField(max_length=100, blank=True, default='')

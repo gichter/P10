@@ -1,9 +1,5 @@
 from rest_framework import serializers
 from .models import Project, Contributor, Issue, Comment
-from users.models import User
-
-
-from users.serializers import UserSerializer
 
 
 class IssueSerializer(serializers.ModelSerializer):
