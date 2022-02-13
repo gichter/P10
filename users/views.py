@@ -1,12 +1,12 @@
 from rest_framework.views import APIView
-from rest_framework import generics
 from rest_framework.response import Response
-from rest_framework.exceptions import AuthenticationFailed
+from django.contrib.auth import login, logout
 
-import jwt
-
-from .serializers import UserSerializer, UserCreateSerializer
+from .serializers import UserCreateSerializer, LoginSerializer, UserSerializer
 from .models import User
+
+
+from rest_framework import generics, response, permissions, authentication
 
 
 class RegisterView(generics.CreateAPIView):
@@ -14,7 +14,24 @@ class RegisterView(generics.CreateAPIView):
     serializer_class = UserCreateSerializer
 
 
+class CsrfExemptSessionAuthentication(authentication.SessionAuthentication):
+    def enforce_csrf(self, request):
+        return
+
+
 class LoginView(APIView):
+
+    permission_classes = (permissions.AllowAny,)
+    authentication_classes = (CsrfExemptSessionAuthentication,)
+
+    def post(self, request):
+        serializer = LoginSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        login(request, user)
+        return response.Response(UserSerializer(user).data)
+
+    """
     def post(self, request):
         email = request.data['email']
         password = request.data['password']
@@ -31,30 +48,10 @@ class LoginView(APIView):
             'message': 'Successfully Logged In',
         }
         return response
-
-
-class UserView(APIView):
-    def get(self, request):
-        token = request.COOKIES.get('jwt')
-
-        if not token:
-            raise AuthenticationFailed('Unauthenticated')
-
-        try:
-            payload = jwt.decode(token, 'secret', algorithms='HS256')
-        except jwt.ExpiredSignatureError:
-            raise AuthenticationFailed('Unauthenticated')
-
-        user = User.objects.get(id=payload['id'])
-        user_serialized = UserSerializer(user)
-        return (Response(user_serialized.data))
+    """
 
 
 class LogoutView(APIView):
     def post(self, request):
-        response = Response()
-        response.delete_cookie('jwt')
-        response.data = {
-            'message': 'Successfully Logged Out',
-        }
-        return response
+        logout(request)
+        return Response()
