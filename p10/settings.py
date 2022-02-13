@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'softdesk',
     'users',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
