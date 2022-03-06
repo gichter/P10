@@ -1,5 +1,5 @@
 from django.urls import path, re_path
-from .views import RegisterView, LoginView, LogoutView
+from .views import RegisterView
 from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework import permissions
 

@@ -1,6 +1,5 @@
 from django.urls import path
 from .views import ProjectCreate, ProjectDetail, ContributorCreate, ContributorDetail, IssueCreate, IssueDetail, CommentCreate, CommentDetail
-from rest_framework.urlpatterns import format_suffix_patterns
 
 
 urlpatterns = [
@@ -16,6 +15,5 @@ urlpatterns = [
          CommentDetail.as_view()),
 ]
 """
-urlpatterns = format_suffix_patterns(urlpatterns)
     {"email": "ichter.g@gmail.com","password": "159951aA*"}
     """
