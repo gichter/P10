@@ -22,8 +22,6 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('signup/', RegisterView.as_view()),
-    path('loginweb/', LoginView.as_view()),
-    path('logout/', LogoutView.as_view()),
     path('login/', obtain_auth_token,
          name='api_token_auth'),
     re_path(r'^swagger(?P<format>\.json|\.yaml)$',

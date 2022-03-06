@@ -15,7 +15,7 @@ urlpatterns = [
     path('<int:project_id>/issues/<int:issue_id>/comments/<int:id>/',
          CommentDetail.as_view()),
 ]
-urlpatterns = format_suffix_patterns(urlpatterns)
 """
+urlpatterns = format_suffix_patterns(urlpatterns)
     {"email": "ichter.g@gmail.com","password": "159951aA*"}
     """
